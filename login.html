@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SentinelCloud AI — Secure Admin Login</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      color: #eafcff;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at 25% 55%, rgba(0, 209, 255, .18), transparent 32%),
+        radial-gradient(circle at 82% 25%, rgba(255, 55, 35, .13), transparent 24%),
+        #03070c;
+    }
+
+    .grid {
+      position: fixed;
+      inset: 0;
+      opacity: .18;
+      background-image:
+        linear-gradient(rgba(82, 229, 255, .17) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(82, 229, 255, .17) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black, transparent);
+    }
+
+    .warning {
+      position: fixed;
+      color: #ff4c37;
+      font-size: 76px;
+      text-shadow: 0 0 24px #ff2f19;
+      opacity: .65;
+    }
+
+    .warning.one { top: 11%; left: 11%; }
+    .warning.two { top: 10%; right: 12%; font-size: 65px; }
+    .warning.three { bottom: 12%; left: 43%; font-size: 48px; }
+
+    main {
+      position: relative;
+      z-index: 1;
+      width: min(1100px, 92%);
+      min-height: 100vh;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      align-items: center;
+      gap: 70px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(38px, 5vw, 70px);
+      letter-spacing: -2px;
+    }
+
+    .hero h1 span { color: #4ceaff; }
+
+    .hero p {
+      max-width: 520px;
+      color: #96acbc;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .security-orb {
+      width: min(420px, 75vw);
+      aspect-ratio: 1;
+      margin-top: 35px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(86, 240, 255, .5);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(0, 229, 255, .23), rgba(0, 78, 108, .18) 48%, transparent 70%);
+      box-shadow: 0 0 45px rgba(0, 220, 255, .3), inset 0 0 45px rgba(0, 220, 255, .2);
+    }
+
+    .security-orb::before {
+      content: "";
+      width: 76%;
+      aspect-ratio: 1;
+      position: absolute;
+      border: 1px dashed rgba(84, 234, 255, .55);
+      border-radius: 50%;
+    }
+
+    .shield {
+      display: grid;
+      place-items: center;
+      width: 150px;
+      height: 170px;
+      color: #58f5ff;
+      font-size: 88px;
+      border: 4px solid #58f5ff;
+      border-radius: 50% 50% 43% 43%;
+      box-shadow: 0 0 30px #00d9e8, inset 0 0 24px rgba(0, 217, 232, .4);
+    }
+
+    .status {
+      margin-top: 30px;
+      color: #5effc0;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .status::before {
+      content: "●";
+      margin-right: 8px;
+      color: #5effc0;
+    }
+
+    .login-card {
+      padding: 38px;
+      border: 1px solid rgba(104, 235, 255, .27);
+      border-radius: 22px;
+      background: rgba(7, 18, 27, .86);
+      box-shadow: 0 0 48px rgba(0, 207, 255, .14);
+      backdrop-filter: blur(12px);
+    }
+
+    .login-card h2 { margin: 0; font-size: 27px; }
+
+    .login-card > p {
+      margin: 9px 0 28px;
+      color: #93a9b8;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      color: #ccecf1;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #284b5c;
+      border-radius: 10px;
+      outline: none;
+      color: white;
+      background: #07131d;
+      font-size: 16px;
+    }
+
+    input:focus {
+      border-color: #48eaff;
+      box-shadow: 0 0 14px rgba(72, 234, 255, .3);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 28px;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #021014;
+      background: linear-gradient(90deg, #36e9ff, #68f7bb);
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    button:hover { filter: brightness(1.12); }
+
+    .error {
+      padding: 12px;
+      border-left: 3px solid #ff4d39;
+      color: #ffb4aa;
+      background: rgba(255, 70, 52, .12);
+    }
+
+    @media (max-width: 760px) {
+      body { overflow: auto; }
+      main { grid-template-columns: 1fr; padding: 46px 0; gap: 30px; }
+      .hero { text-align: center; }
+      .hero p { margin-inline: auto; }
+      .security-orb { width: 220px; margin: 22px auto; }
+      .shield { width: 92px; height: 110px; font-size: 58px; }
+      .warning { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="warning one">⚠</div>
+  <div class="warning two">⚠</div>
+  <div class="warning three">!</div>
+
+  <main>
+    <section class="hero">
+      <h1>Sentinel<span>Cloud</span> AI</h1>
+      <p>AI-driven automated incident response and real-time threat mitigation for enterprise cloud infrastructure.</p>
+
+      <div class="security-orb">
+        <div class="shield">✓</div>
+      </div>
+
+      <div class="status">Security systems ready</div>
+    </section>
+
+    <section class="login-card">
+      <h2>Admin Command Center</h2>
+      <p>Sign in to access the protected security dashboard.</p>
+
+      {% if error %}
+        <p class="error">{{ error }}</p>
+      {% endif %}
+
+      <form method="post">
+        <label for="username">Admin username</label>
+        <input id="username" name="username" required autofocus>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required>
+
+        <button type="submit">Secure sign in</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
